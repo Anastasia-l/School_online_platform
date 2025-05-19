@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5 pt-4">  
+    <div class="course-header mb-4">
+        <a href="{% url 'courses:course_detail' quiz.lesson.course.id %}"
+            class="btn btn-outline-secondary">
+            Назад к уроку
+        </a>
+    </div>
+
+    
+    <div class="content-section mt-5">
+        <h2 class="mb-4">{{ quiz.title }}</h2>
+        
+        <div class="mb-4">
+            <a href="{% url 'courses:add_question' quiz.id %}" 
+               class="btn btn-success">
+                + Добавить вопрос
+            </a>
+        </div>
+
+        <div class="list-group">
+            {% for question in questions %}
+            <div class="list-group-item mb-3 shadow-sm">
+                <h5>Вопрос {{ question.order }}</h5>
+                <p>{{ question.text }}</p>
+                <p class="text-muted">Правильный ответ: {{ question.correct_answer }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .course-header {
+        background: linear-gradient(135deg, #2c3e50, #3498db); 
+        padding: 2rem 1rem;
+        margin: -2rem -1.5rem 2rem;
+        border-radius: 0 0 30px 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        top: 80px;
+    }
+
+    .btn-outline-secondary {
+        border-radius: 20px;
+        padding: 8px 25px;
+        transition: all 0.3s;
+        color: #fff;
+        border: 2px solid #fff;
+        margin-left: 1.5rem;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+        transform: translateX(-5px);
+    }
+
+    .content-section {
+        margin-top: 100px;  /* Отступ для основного контента */
+        padding: 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    }
+
+    .list-group-item {
+        border-radius: 10px !important;
+        transition: transform 0.2s;
+    }
+
+    .list-group-item:hover {
+        transform: translateX(5px);
+    }
+</style>
+{% endblock %}

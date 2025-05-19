@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    .pagination {
+        display: flex;
+        flex-wrap: nowrap;
+        list-style: none;
+        padding: 0;
+    }
+
+    .pagination .page-link {
+        color: black;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 0 2px;
+        border: 1px solid #dee2e6;
+        display: inline-block;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color:rgb(74, 110, 154);
+        color: white;
+        border-color:rgb(74, 110, 154);
+    }
+
+    .pagination .page-item:not(.active) .page-link:hover {
+        background-color: #ddd;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Все курсы</h1>
+
+    <ul class="list-unstyled">
+        {% for course in courses %}
+        <li class="mb-4 p-3 border rounded">
+            <h3>
+                <a href="{% url 'courses:course_detail' course.id %}">{{ course.title }}</a>    
+            </h3>
+            <p>{{ course.description|truncatewords:30 }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+
+
+    {# Пагинация #}
+    <nav aria-label="Навигация по страницам">
+        <ul class="pagination justify-content-center">
+            {% if courses.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo;&laquo;</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ courses.previous_page_number }}">&laquo;</a>
+            </li>
+        {% endif %}
+
+        {% for num in courses.paginator.page_range %}
+            <li class="page-item {% if num == courses.number %}active{% endif %}">
+                <a class = "page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+        {% endfor %}
+
+        {% if courses.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ courses.next_page_number }}">&raquo;</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ courses.paginator.num_pages }}">&raquo;&raquo;</a>
+            </li>
+        {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

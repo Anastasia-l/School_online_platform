@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Создать тест</h2> 
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Сохранить тест</button>
+        <a href="{% url 'courses:lesson_detail' lesson_id=lesson.id %}" class="btn btn-secondary">Отмена</a>
+    </form>
+
+</div>
+{% endblock %}
