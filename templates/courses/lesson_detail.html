@@ -2,83 +2,219 @@
 
 {% block title %}{{ lesson.title }}{% endblock %}
 
+{% block extra_css %}
+<style>
+    body {
+        background-color: rgb(23, 20, 46);
+        color: #ffffff;
+    }
+
+    .lesson-container {
+         max-width: 900px;
+        margin: 2rem auto;
+        padding: 40px;
+        background: rgba(255,255,255,0.13);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255,255,255,0.1);
+        border-radius: 10px;
+        box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    }
+
+    .lesson-header:
+        margin-bottom: 2rem;
+        
+
+    .lesson-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 2.2rem;
+        color: #ffffff;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .lesson-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: rgba(255,255,255,0.8);
+        padding: 20px;
+        background: rgba(0,0,0,0.2);
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+
+    .btn-group {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        padding: 10px 25px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-outline-secondary {
+        background: rgba(255,255,255,0.07);
+        border: 2px solid rgba(255,255,255,0.1);
+        color: #ffffff;
+    }
+
+    .btn-outline-secondary:hover {
+        background: rgba(255,255,255,0.2);
+        transform: translateY(-2px);
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #23a2f6, #1845ad);
+        border: none;
+        justify-content: center;
+    }
+
+    .btn-warning {
+        background: linear-gradient(45deg, #ff9f43, #ff6b6b);
+        border: none;
+        justify-content: center;
+
+    }
+
+    .btn-danger {
+        background: linear-gradient(45deg, #ff4757, #ff6b81);
+        border: none;
+        justify-content: center;
+    }
+
+    .btn-success {
+        background: linear-gradient(45deg, #2ecc71, #27ae60);
+        border: none;
+        justify-content: center;
+    }
+
+    .btn-info {
+        background: linear-gradient(45deg, #2ed573, #1e90ff);
+        border: none;
+        justify-content: center;
+    }
+
+    .btn:hover {
+        filter: brightness(1.1);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .teacher-actions {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 2px solid rgba(255,255,255,0.1);
+    }
+    .teacher-actions h4 {
+        color: #23a2f6;
+        margin-bottom: 1.5rem;
+    }
+
+    h1 {
+        margin-bottom: 15px;
+    }
+
+
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-
-    <div class="mb-4">
-        <a href="{% url 'courses:course_detail' lesson.course.id %}" 
-            class="btn btn-outline-secondary">
-            Назад к курсу
-        </a>
-        <br>
-        <a href="{% url 'courses:course_list' %}"
-            class="btn btn-outline-secondary ms-2">
-            К списку курсов
-        </a>
-    </div>
-
-    <div class="card shadow mb-4">
-        <div class="card-header">
-            <h1 class="card-title-mb-0">{{ lesson.title }}</h1>
-        </div>
-        <div class="card-body">
-            <div class="lesson-content mb-4">
-                {{ lesson.content|linebreaks }}
-            </div>
-
-            {% if lesson.video_url %}
-            <div class="ratio ratio-16x9 mb-4">
-                <iframe src="{{ lesson.video_url }}" allowfullscreen></iframe>
-            </div>
-            {% endif %}
-
-            {% if lesson.file %}
-            <div class="mb-4">
-                <a href="{{ lesson.file.url }}"
-                    download =" {{ lesson.file.name|default:"Материалы урока"}}" 
-                    class="btn btn-primary">
-                    <i class="bi bi-download"></i>Скачать материалы
-                </a>
-            </div>
-            {% endif %}
+<div class="lesson-container">
+    <div class="lesson-header">
+        <div class="btn-group">
+            <a href="{% url 'courses:course_detail' lesson.course.id %}" 
+               class="btn btn-outline-secondary">
+                ← Назад к курсу
+            </a>
+            <a href="{% url 'courses:course_list' %}"
+               class="btn btn-outline-secondary">
+                К списку курсов
+            </a>
         </div>
     </div>
 
+    <h1 class="lesson-title" align="center">{{ lesson.title }}</h1>
+
+
+    <div class="lesson-content">
+        {{ lesson.content|linebreaks }}
+    </div>
+
+
+    {% if lesson.file %}
+    <div class="btn-group">
+        <a href="{{ lesson.file.url }}" download 
+           class="btn btn-primary">
+            <i class="bi bi-download"></i>Скачать материалы
+        </a>
+    </div>
+    {% endif %}
+
+    {% if progress %}
+        <div class="success">
+            <i class="check-complete"></i>
+            Вы завершили этот урок {{progress.completed_at|date:"d.m.Y"}}
+            с результатом {{progress.score}}%
+        </div>
+    {% else %}
+        <div style="text-align: center;">
+            <form method="post" action="{% url 'courses:complete_lesson' lesson.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-square"></i>Завершить урок
+                </button>
+            </form>
+        </div>
+    {% endif %}
+
+    {% if user != lesson.course.teacher %}
+        {% if lesson.quizzes.exists %}
+            <a href="{% url 'courses:quiz_detail' quiz_id=lesson.quizzes.first.id %}" 
+                class="btn btn-info" style="text-align: center; display: flex; margin-top: 40px;">
+                <i class="bi bi-check-square"></i> Открыть тест
+            </a>
+        {% endif %}
+    {% endif %}
 
     {% if user == lesson.course.teacher %}
-    <div class="teacher-actions border-top pt-4">
+    <div class="teacher-actions">
         <h4>Управление уроком:</h4>
-        <div class="btn-group" role="group">
+        <div class="btn-group">
             <a href="{% url 'courses:edit_lesson' lesson.id %}"
-                class="btn btn-warning">
-                <i class="bi bi-pencil"></i> Редактировать урок
+               class="btn btn-warning">
+                <i class="bi bi-pencil"></i> Редактировать
             </a>
-            <br>
             <a href="{% url 'courses:delete_lesson' lesson.id %}"
-                class="btn btn-danger">
-                <i class="bi bi-trash"></i> Удалить урок
+               class="btn btn-danger">
+                <i class="bi bi-trash"></i> Удалить
             </a>
         </div>
 
-        <div class="mt-3">
-            <h4>Управление тестом:</h4>
-            <div class="d-flex">
-                {% if lesson.quizzes.exists %}
-                <a href="{% url 'courses:quiz_detail' quiz_id=lesson.quizzes.first.id %}" 
-                    class="btn btn-info">
-                    <i class="bi-bi-gear"></i> Редактировать тест
-            
-                </a>
-                {% else %}
-                <a href="{% url 'courses:add_quiz' lesson.id %}"
-                    class="btn btn-success">
-                    <i class="bi bi-plus-lg"></i> Создать тест
-                </a>
-                {% endif %}
-            </div>
+        <h4 class="mt-4">Управление тестом:</h4>
+        <div class="btn-group">
+            {% if lesson.quizzes.exists %}
+            <a href="{% url 'courses:quiz_detail' quiz_id=lesson.quizzes.first.id %}" 
+               class="btn btn-info">
+                <i class="bi bi-gear"></i> Редактировать тест
+            </a>
+            {% else %}
+            <a href="{% url 'courses:add_quiz' lesson.id %}"
+               class="btn btn-success">
+                <i class="bi bi-plus-lg"></i> Создать тест
+            </a>
+            {% endif %}
         </div>
     </div>
     {% endif %}
 </div>
-{% endblock%}
+{% endblock %}
 
