@@ -37,7 +37,6 @@ class Lesson(models.Model):
     title = models.CharField(max_length=200, verbose_name="Название урока")
     content = models.TextField(verbose_name="Содержание урока")  # Текст урока
     order = models.PositiveIntegerField(validators=[MinValueValidator(1)], verbose_name="Порядковый номер")
-    video_url = models.URLField(blank=True, null=True, verbose_name="Ссылка на видео")
     file = models.FileField(upload_to='lesson_files/', blank=True, null=True, verbose_name="Файл для скачивания")
 
     class Meta:
@@ -93,7 +92,7 @@ class UserProgress(models.Model):
                                verbose_name="Урок")  # Пройденный урок
     completed_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата завершения")
     score = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)],
-                                        verbose_name="Результат (%)")  # Баллы за 
+                                        verbose_name="Результат (%)") 
 
     class Meta:
         verbose_name = "Прогресс студента"
@@ -118,3 +117,4 @@ class Enrollment(models.Model):
 
     def __str__(self):
         return f"{self.username} - {self.course.title}"
+
