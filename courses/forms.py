@@ -11,7 +11,7 @@ class CourseForm(forms.ModelForm):
 class LessonForm(forms.ModelForm):
     class Meta:
         model = Lesson
-        fields = ['title', 'content', 'order', 'video_url', 'file']
+        fields = ['title', 'content', 'order', 'file']
 
 
 class QuizForm(forms.ModelForm):
