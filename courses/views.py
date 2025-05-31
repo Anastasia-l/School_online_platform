@@ -10,6 +10,7 @@ CustomUser = get_user_model()
 
 
 # Create your views here.
+@login_required
 def course_list(request):
     all_courses = Course.objects.filter(is_published=True).select_related('teacher')
 
@@ -27,19 +28,38 @@ def course_list(request):
     return render(request, 'courses/course_list.html', {'courses': courses})
 
 
+@login_required
 def course_detail(request, course_id):
     course = get_object_or_404(Course.objects.select_related('teacher'), pk=course_id)
-    lessons = course.lessons.all().order_by('order')
-    is_enrolled = False
-    if request.user.is_authenticated:
-        is_enrolled = Enrollment.objects.filter(
-            user=request.user,
-            course=course
-        ).exists()
-    return render(request, "courses/course_detail.html",
-                  {'course': course, 'lessons': lessons, 'is_enrolled': is_enrolled})
+    # Меню завершенных уроков курса
+    completed_lessons = list(UserProgress.objects.filter(
+        user=request.user,
+        lesson__course=course
+    ).values_list('lesson_id', flat=True))
+    # Проверяем запись текущего пользователя на курс
+    is_teacher = request.user == course.teacher
+    is_enrolled = Enrollment.objects.filter(user=request.user, course=course).exists()
+    # Показываем уроки только записанным студентам
+    lessons = course.lessons.all().order_by('order') if is_teacher or is_enrolled else None
+
+    # Рассчитываем прогресс
+    total_lessons = lessons.count() if lessons else 0
+    completed_count = len(completed_lessons)
+    progress_percent = int((completed_count / total_lessons * 100)) if total_lessons > 0 else 0
+
+    return render(request, "courses/course_detail.html", {
+        'course': course,
+        'lessons': lessons,
+        'is_enrolled': is_enrolled,
+        'is_teacher': is_teacher,
+        'progress_percent': progress_percent,
+        'total_lessons': total_lessons,
+        'completed_count': completed_count,
+        'completed_lessons': completed_lessons
+    })
 
 
+@login_required
 def lesson_detail(request, lesson_id):
     lesson = get_object_or_404(Lesson.objects.select_related('course'), pk=lesson_id)
     progress = None
@@ -78,19 +98,23 @@ def create_course(request):
 def enroll_course(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
     if request.method == 'POST':
+        if request.user == course.teacher:
+            return redirect('courses:course_detail', course_id=course.id)
+
         Enrollment.objects.get_or_create(
             user=request.user,
             course=course
         )
-    return redirect('course_detail', course_id=course.id)
+
+    return redirect('courses:course_detail', course_id=course.id)
 
 
 @login_required
 def complete_lesson(request, lesson_id):
     lesson = get_object_or_404(Lesson, pk=lesson_id)
     if request.method == 'POST':
-        UserProgress.objects.update_or_create(user=request.user, lesson=lesson, defaults={'score': 0})
-    return redirect('lesson_detail', lesson_id=lesson.id)
+        UserProgress.objects.update_or_create(user=request.user, lesson=lesson, defaults={'score': 100})
+    return redirect('courses:lesson_detail', lesson_id=lesson.id)
 
 
 # Добавление возможности учителям добавлять контент к курсам (и только учителям!)
@@ -112,7 +136,7 @@ def create_lesson(request, course_id):
         form = LessonForm(request.POST, request.FILES)
         if form.is_valid():
             lesson = form.save(commit=False)
-            lesson.course = course
+            lesson.course = course  # Привязка урока к конкретному курсу
             lesson.save()
             return redirect('courses:course_detail', course_id=course.id)
         return render(request, 'courses/create_lesson.html', {
@@ -136,7 +160,7 @@ def edit_lesson(request, lesson_id):
         form = LessonForm(request.POST, request.FILES, instance=lesson)
         if form.is_valid():
             form.save()
-            return redirect('courses:course_detail', course_id=lesson.course.id)
+            return redirect('courses:lesson_detail', lesson_id=lesson.id)
     else:
         form = LessonForm(instance=lesson)
 
@@ -167,7 +191,7 @@ def add_quiz(request, lesson_id):
             quiz = form.save(commit=False)
             quiz.lesson = lesson
             quiz.save()
-            return redirect("courses:lesson_detail", lesson_id=lesson.id)
+            return redirect("courses:quiz_detail", quiz_id=quiz.id)
     else:
         form = QuizForm()
 
@@ -177,7 +201,6 @@ def add_quiz(request, lesson_id):
 @login_required
 def quiz_detail(request, quiz_id):
     quiz = get_object_or_404(Quiz, pk=quiz_id)
-    check_teacher_access(request.user, quiz.lesson.course)
 
     return render(request, 'courses/quiz_detail.html', {
         'quiz': quiz,
@@ -204,3 +227,4 @@ def add_question(request, quiz_id):
         form = QuestionForm(initial={'order': next_order})
 
     return render(request, 'courses/add_question.html', {'form': form, 'quiz': quiz})
+
