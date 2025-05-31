@@ -1,13 +1,75 @@
 {% extends 'base.html' %}
 
+{% block extra_css %}
+<style>
+     body {
+        background-color: rgb(23, 20, 46);
+        color: #ffffff;
+    }
+
+    .add-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        margin-top: 150px;
+        padding: 40px;
+        background: rgba(255,255,255,0.13);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255,255,255,0.1);
+        border-radius: 10px;
+        box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #23a2f6, #1845ad);
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        justify-content: center;
+
+    }
+
+    .btn:hover {
+        filter: brightness(1.1);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    
+    #id_title {
+        font-size: 1.4rem;
+        padding: 15px 20px;
+        height: 60px; 
+        width: 100%;
+        text-align: center;
+    }
+
+    #id_description {
+        width: 100%;
+        min-height: 70vh; 
+        height: auto;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        padding: 25px;
+        background: rgba(0,0,0,0.3) !important;
+        border: 2px solid rgba(255,255,255,0.2);
+        color: #ffffff;
+        border-radius: 10px;
+        resize: vertical;
+        transition: all 0.3s ease;
+        max-width: 1000px;
+    }
+    
+</style>
+{% endblock %}
 {% block content %}
-<div class="container mt-4">
-    <h2>Создать тест</h2> 
+<div class="add-container">
+    <h2 class="text-center mb-4" style="color: #ffffff; font-family: 'Poppins', sans-serif;">Создать тест</h2> 
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Сохранить тест</button>
-        <a href="{% url 'courses:lesson_detail' lesson_id=lesson.id %}" class="btn btn-secondary">Отмена</a>
+        <div class="button-group" style="display: flex; justify-content: center; gap: 1rem;">
+            <button type="submit" class="btn btn-primary">Сохранить тест</button>
+            <a href="{% url 'courses:lesson_detail' lesson_id=lesson.id %}" class="btn btn-secondary">Отмена</a>
+        </div>
     </form>
 
 </div>
