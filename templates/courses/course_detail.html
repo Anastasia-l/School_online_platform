@@ -4,101 +4,168 @@
 
 {% block extra_css %}
 <style>
+    body {
+        background-color:rgb(23, 20, 46);
+        color: #ffffff;
+    }
+
+    li {
+        background:rgba(255, 255, 255, 0.13); 
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        box-shadow: 0 0 40px rgba(8,7,16,0.6);
+        max-width: 3000px;
+        position: relative;
+        overflow: hidden;
+        margin-top: 25px;
+        margin-right: 50px;
+        text-align: center;
+    }
+
     .course-header {
-        background: linear-gradient(135deg, #2c3e50, #3498db);
-        padding: 4rem 1rem;
-        margin: -2rem -1.5rem 3rem;
-        border-radius: 0 0 30px 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        background: rgba(255, 255, 255, 0.13);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        box-shadow: 0 0 40px rgba(8,7,16,0.6);
+        max-width: 3000px;
         position: relative;
         overflow: hidden;
     }
 
     .course-title {
-        font-family: 'Arial Rounder MT Bold', sans-serif;
+        font-family: 'Poppins', sans-serif;
         font-size: 2.5rem;
         text-align: center;
-        margin: 2rem 0;
-        color: #2c3e50
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); 
+        margin: 1rem 0 2rem;
+        color: #ffffff;
+        font-weight: 500; 
     }
 
     .course-description {
         font-size: 1.1rem;
         line-height: 1.8;
-        color: #2c3e50; 
-        max-width: 800px;
+        color: rgba(255,255,255,0.8); 
+        max-width: 800px; 
         margin: 0 auto 2rem;
         opacity: 0.95;
         text-align: center;
     }
 
     .lesson-list {
-        margin-top: 2rem;
+        list-style: none;
         padding: 0;
+        margin: 2rem auto;
+        padding: 0;
+        max-width: 900px;
+        width: 100%
     }
 
     .lesson-item {
-        background: #ffffff;
-        border: 1px solid #e0e0e0;
+        background-color: rgba(255,255,255,0.07);
+        border: 2px solid transparent rgba(255,255,255,0.1);
         border-radius: 10px;
         margin-bottom: 1.5rem;
-        padding: 1.5rem;
-        transition: transforms 0.2s, box-shadow 0.2s;
+        padding: 25px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .lesson-item:hover {
-        transforms: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transforms: translateX(10px);
+        box-shadow: 0 0px 20px rgba(255,255,255,0.1); 
     }
 
     .lesson-title {
-        color:rgb(25, 70, 100);
+        color: #ffffff;
         font-size: 1.4rem;
         margin-bottom: 0.8rem;
+        font-weight: 500;
     }
 
     .lesson-content {
-        color: #667;
+        color: rgba(255,255,255,0.8);
         line-height: 1.6;
         margin-bottom: 1rem;
+        padding: 15px;
     }
 
     .btn-outline-secondary {
+        background: rgba(255,255,255,0.07);
+        border: 2px solid rgba(255,255,255,0.1);
+        color: #ffffff;
         border-radius: 20px;
         padding: 8px 20px;
         transition: all 0.3s;
-        color: #f8f9fa
     }
 
     .btn-outline-secondary:hover {
-        background-color:rgb(48, 49, 50);
-        transform: translateX(-3px);
+        background: rgba(255,255,255,0.2);
+        border-color: rgba(255,255,255,0.3); 
     }
 
     .teacher-actions {
-        border-top: 2px solid #eee;
-        padding-top: 2rem;
         margin-top: 3rem;
+        text-align: center;
+    }
+
+    .btn-success {
+        background: linear-gradient(45deg, #23a2f6, #1845ad);
+        border: none;
+        border-radius: 5px;
+        padding: 12px 30px;
+        font-weight: 600;
+        transition: transform 0.3s ease;
+    }
+
+    .btn-success:hover {
+        transform: translateY(-2px);
     }
 
     .lesson-link {
-        display: inline-flex;
-        align-items: center;
-        color: #3498db;
+        color: #23a2f6;
         text-decoration: none;
         transition: color 0.3s;
     }
 
     .lesson-link:hover {
-        color: #2980b9;
-        text-decoration: underline;
+        color: #ff512f;
+        text-decoration: underline; 
     }
 
-    .lesson-link:i {
-        margin-left: 8px;
-        font-size: 0.9em;
+    .lesson-button {
+        display: inline-block;
+        background: rgba(255,255,255,0.1);
+        border: 2px solid rgba(255,255,255,0.2);
+        color:rgb(255, 255, 255);
+        padding: 8px 25px;
+        border-radius: 20px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        margin-top: 15px;
     }
+
+    .lesson-button:hover {
+        background: rgba(255,255,255,0.2);
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .lesson-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .progress-info {
+        text-align: right;
+    }
+
+    h2 {
+        text-align: center;
+    }
+
 </style>
 {% endblock %}
 
@@ -110,24 +177,51 @@
 
     <h1 class="course-title">{{course.title}}</h1>
     <p class="course-description">{{course.description}}</p>
-    <h2 class="lesson-title">Уроки:</h2>
-    <ul>
-        {% for lesson in course.lessons.all %}
-        <li>
-            <h3>{{ lesson.title }}</h3>
-            <p>{{ lesson.content|truncatewords:50}}</p>
-            <a href="{% url 'courses:lesson_detail' lesson.id %}">Подробнее</a>
-        </li>
-        {% endfor %}
-    </ul>
-</div>
 
-{% if user == course.teacher %}
-<div class="teacher-actions mb-4">
-    <a href="{% url 'courses:create_lesson' course.id %}" class="btn btn-success">
-        <i class="bi bi-plus-lg"></i> Добавить урок
-    </a>
-</div>
-{% endif %}
+    {% if total_lessons > 0 %}
+    <div class="progress-info">
+        Пройдено: {{ completed_count }} из {{ total_lessons }} уроков
+        ({{ progress_percent }}%)
+    </div>
+    {% endif %}
 
+    <!-- Проверка доступа для учителя или записанных студентов -->
+    {% if user == course.teacher or is_enrolled %}
+        <h2 class="lesson-title">Уроки курса:</h2>
+        <ul class="lesson-list">
+            {% for lesson in lessons %}
+            <li class="lesson-item">
+                <div class="lesson-content-wrapper">
+                    <h3>{{ lesson.title }}</h3>
+                    <p>{{ lesson.content|truncatewords:50}}</p>
+                    <a href="{% url 'courses:lesson_detail' lesson.id %}" class="lesson-button">
+                        Просмотреть урок
+                    </a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    {% elif user != course.teacher %}
+        <!-- Блок записи только для студентов -->
+        <div class="enrollment-box">
+            <h3 class="enrollment-title">Начните обучение прямо сейчас!</h3>
+            <form method="post" action="{% url 'courses:enroll_course' course.id %}">
+                {% csrf_token %}
+                <button type="submit" class="enroll-btn">
+                    <i class="subscribe button"></i> Записаться на курс
+                </button>
+            </form>
+            <p class="text-muted mt-3">После записи вы получите полный доступ ко всем материалам</p>
+        </div>
+    {% endif %}
+
+    <!-- Блок действий для учителя -->
+    {% if user == course.teacher %}
+    <div class="teacher-actions mb-4">
+        <a href="{% url 'courses:create_lesson' course.id %}" class="btn btn-success">
+            <i class="bi bi-plus-lg"></i> Добавить урок
+        </a>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
