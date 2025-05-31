@@ -9,8 +9,8 @@ class CustomUser(AbstractUser):
     STUDENT = 1
     TEACHER = 2
     ROLE_CHOICES = (
-        (STUDENT, 'Student'),
-        (TEACHER, 'Teacher'),
+        (STUDENT, 'Ученик'),
+        (TEACHER, 'Преподаватель'),
     )
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, default=STUDENT)
     bio = models.TextField(blank=True, null=True)  # Описание профиля
@@ -37,3 +37,4 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+
