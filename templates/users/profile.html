@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+
+    body {
+        background-color: rgb(23, 20, 46);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding: 40px;
+    }
+
+    main {
+        flex: 1;
+        padding: 1rem 0;
+    }
+
+    .profile-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+    .profile-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .profile-header default{
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .profile-avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #23a2f6;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .default-avatar a {
+        display: inline-block;
+        line-height: 0;
+        padding: 0;
+        margin: 0;
+        width: 150px;
+        height: 50px;
+        font-size: 40px;
+        color: #666;
+        margin-bottom: 0.5rem !important;
+    }
+
+
+    .profile-username {
+        font-size: 2.5rem;
+        margin: 1rem 0 0.5rem;
+        color: #fff;
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .profile-role {
+        color: #23a2f6;
+        font-size: 1.2rem;
+        text-transform: uppercase;
+        margin-top: 0 !important;
+    }
+
+    .profile-info {
+        background: rgba(0,0,0,0.3);
+        padding: 1.5rem;
+        border-radius: 10px;
+    }
+
+    .info-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .info-section h3 {
+        color: #23a2f6;
+        border-bottom: 2px solid currentColor;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .bio {
+        white-space: pre-line;
+        line-height: 1.6;
+    }
+
+    p {
+        color: #ffffff;
+    }
+
+    .btn-courses {
+        display: flex;
+        margin-bottom: 30px;
+    }
+
+    .btn-courses a {
+        padding: 10px 25px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        gap: 8px;
+        background: rgba(255,255,255,0.07);
+        border: 2px solid rgba(255,255,255,0.1);
+        color: #ffffff;
+    }
+
+    .btn-courses a:hover {
+        background: rgba(255,255,255,0.2);
+        transform: translateY(-2px);
+    }
+
+        .profile-container .default-avatar {
+        width: 250px;
+        height: 250px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 2rem;
+        justify-content: center;
+        border: 4px solid #23a2f6;
+        background: rgba(255,255,255,0.05);
+    }
+
+    .profile-header .bi-person-circle {
+        font-size: 150px;
+        color: #23a2f6;
+    }
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="btn-courses">
+        <a href="{% url 'courses:course_list' %}">
+            К списку курсов
+        </a>
+    </div>
+    <div class="profile-header">
+        {% if user.avatar %}
+        <img src="{{ user.avatar.url }}" alt="Аватар" class="profile-avatar">
+        {% endif %}
+        <h1 class="profile-username">{{ user.username }}</h1>
+        <p class="profile-role">{{ role }}</p>
+    </div>
+
+    <div class="profile-info">
+        <div class="info-section">
+            <h3>Основная информация</h3>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Дата регистрации:</strong> {{ user.date_joined|date:"d.m.Y" }}</p>
+        </div>
+
+        {% if user.bio %}
+        <div class="info-section">
+            <h3>О себе</h3>
+            <p class="bio">{{ user.bio }}</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
