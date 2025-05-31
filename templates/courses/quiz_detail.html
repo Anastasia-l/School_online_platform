@@ -1,31 +1,35 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-5 pt-4">  
-    <div class="course-header mb-4">
+<div class="quiz-container">  
+    <div class="course-header">
         <a href="{% url 'courses:course_detail' quiz.lesson.course.id %}"
-            class="btn btn-outline-secondary">
+            class="btn btn-secondary">
             Назад к уроку
         </a>
     </div>
 
-    
-    <div class="content-section mt-5">
+  
+    <div class="content">
         <h2 class="mb-4">{{ quiz.title }}</h2>
         
-        <div class="mb-4">
-            <a href="{% url 'courses:add_question' quiz.id %}" 
-               class="btn btn-success">
-                + Добавить вопрос
-            </a>
-        </div>
+        {% if user == quiz.lesson.course.teacher %} 
+            <div>
+                <a href="{% url 'courses:add_question' quiz.id %}" 
+                class="btn btn-success">
+                    + Добавить вопрос
+                </a>
+            </div>
+        {% endif %}
 
         <div class="list-group">
             {% for question in questions %}
-            <div class="list-group-item mb-3 shadow-sm">
+            <div class="list-group-item">
                 <h5>Вопрос {{ question.order }}</h5>
                 <p>{{ question.text }}</p>
-                <p class="text-muted">Правильный ответ: {{ question.correct_answer }}</p>
+                {% if user == lesson.course.teacher %}
+                    <p class="text-muted">Правильный ответ: {{ question.correct_answer }}</p>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -35,49 +39,37 @@
 
 {% block extra_css %}
 <style>
-    .course-header {
-        background: linear-gradient(135deg, #2c3e50, #3498db); 
-        padding: 2rem 1rem;
-        margin: -2rem -1.5rem 2rem;
-        border-radius: 0 0 30px 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        top: 80px;
+    body {
+        background-color: rgb(23, 20, 46);
+        color: #ffffff;
     }
 
-    .btn-outline-secondary {
-        border-radius: 20px;
-        padding: 8px 25px;
-        transition: all 0.3s;
-        color: #fff;
-        border: 2px solid #fff;
-        margin-left: 1.5rem;
+    .quiz-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        margin-top: 150px;
+        padding: 40px;
+        background: rgba(255,255,255,0.13);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255,255,255,0.1);
+        border-radius: 10px;
+        box-shadow: 0 0 40px rgba(8,7,16,0.6);
     }
 
-    .btn-outline-secondary:hover {
-        background-color: rgba(255, 255, 255, 0.15);
-        transform: translateX(-5px);
+    .btn-secondary {
+        background: rgba(255,255,255,0.1);
+        border: 2px solid rgba(255,255,255,0.2);
+        color: #ffffff;
+        padding: 12px 30px;
+        border-radius: 25px;
+        margin-bottom: 25px;
     }
 
-    .content-section {
-        margin-top: 100px;  /* Отступ для основного контента */
-        padding: 20px;
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    .btn:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
 
-    .list-group-item {
-        border-radius: 10px !important;
-        transition: transform 0.2s;
-    }
-
-    .list-group-item:hover {
-        transform: translateX(5px);
-    }
 </style>
 {% endblock %}
