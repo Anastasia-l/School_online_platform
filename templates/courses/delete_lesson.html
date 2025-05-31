@@ -1,13 +1,42 @@
 {% extends 'base.html' %}
 
+{% block extra_css %}
+<style>
+
+    body {
+        background-color: rgb(23, 20, 46);
+        color: #ffffff;
+    }
+
+    .delete-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        margin-top: 50px;
+        padding: 40px;
+        background: rgba(255,255,255,0.13);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255,255,255,0.1);
+        border-radius: 10px;
+        box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.1);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
+<div class="delete-container">
     <h2>Удаление урока: {{ lesson.title }}</h2>
     <p>Вы уверены, что хотите удалить этот урок?</p>
     <form method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Да, удалить</button>
-        <a href="{% url 'courses:course_detail' lesson.course.id %}" class="btn btn-secondary">Отмена</a>
+        <a href="{% url 'courses:lesson_detail' lesson.id %}" class="btn btn-secondary">Отмена</a>
     </form>
 </div>
 {% endblock %}
+
