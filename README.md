@@ -42,7 +42,7 @@
 
 ## Установка
 1) Необходимо клонировать репозиторий в отдельную папку. Сделать это можно при помощи команды: 
-`git clone https://github.com/Anastasia-l/School_online_platform 
+`git clone https://github.com/Anastasia-l/School_online_platform` 
 
 2) В этой папке требуется создать виртуальное окружение:
 `python -m venv venv`
